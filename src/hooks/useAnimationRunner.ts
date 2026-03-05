@@ -16,9 +16,6 @@ export function useAnimationRunner() {
   // Cancellation ref
   const isCancelledRef = useRef(false);
 
-  // Simple settings - one step at a time
-  const GRAPH_BATCH_SIZE = 1;
-
   /**
    * Simple step-by-step runner
    */
