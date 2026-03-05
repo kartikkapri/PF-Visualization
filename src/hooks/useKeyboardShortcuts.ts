@@ -1,1 +1,63 @@
-import { useEffect } from 'react';nimport { useAppState } from './useApp';\nimport { useGridActions } from './useGrid';\n\ninterface UseKeyboardShortcutsProps {\n  onRunAlgorithm: () => void;\n  onCancelAnimation: () => void;\n}\n\nexport const useKeyboardShortcuts = ({\n  onRunAlgorithm,\n  onCancelAnimation,\n}: UseKeyboardShortcutsProps) => {\n  const { isAnimating } = useAppState();\n  const { resetGrid, clearPath, clearWalls } = useGridActions();\n\n  useEffect(() => {\n    const handleKeyDown = (event: KeyboardEvent) => {\n      // Ignore if user is typing in an input\n      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {\n        return;\n      }\n\n      switch (event.key.toLowerCase()) {\n        case ' ': // Space - Run/Stop algorithm\n          event.preventDefault();\n          if (isAnimating) {\n            onCancelAnimation();\n          } else {\n            onRunAlgorithm();\n          }\n          break;\n        case 'r': // R - Reset grid\n          event.preventDefault();\n          if (!isAnimating) {\n            resetGrid();\n          }\n          break;\n        case 'c': // C - Clear path\n          event.preventDefault();\n          if (!isAnimating) {\n            clearPath();\n          }\n          break;\n        case 'w': // W - Clear walls\n          event.preventDefault();\n          if (!isAnimating) {\n            clearWalls();\n          }\n          break;\n        case 'escape': // Escape - Stop animation\n          event.preventDefault();\n          if (isAnimating) {\n            onCancelAnimation();\n          }\n          break;\n      }\n    };\n\n    window.addEventListener('keydown', handleKeyDown);\n    return () => window.removeEventListener('keydown', handleKeyDown);\n  }, [isAnimating, onRunAlgorithm, onCancelAnimation, resetGrid, clearPath, clearWalls]);\n};
+import { useEffect } from 'react';
+import { useAppState } from './useApp';
+import { useGridActions } from './useGrid';
+
+interface UseKeyboardShortcutsProps {
+  onRunAlgorithm: () => void;
+  onCancelAnimation: () => void;
+}
+
+export const useKeyboardShortcuts = ({
+  onRunAlgorithm,
+  onCancelAnimation,
+}: UseKeyboardShortcutsProps) => {
+  const { isAnimating } = useAppState();
+  const { resetGrid, clearPath, clearWalls } = useGridActions();
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ignore if user is typing in an input
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (event.key.toLowerCase()) {
+        case ' ': // Space - Run/Stop algorithm
+          event.preventDefault();
+          if (isAnimating) {
+            onCancelAnimation();
+          } else {
+            onRunAlgorithm();
+          }
+          break;
+        case 'r': // R - Reset grid
+          event.preventDefault();
+          if (!isAnimating) {
+            resetGrid();
+          }
+          break;
+        case 'c': // C - Clear path
+          event.preventDefault();
+          if (!isAnimating) {
+            clearPath();
+          }
+          break;
+        case 'w': // W - Clear walls
+          event.preventDefault();
+          if (!isAnimating) {
+            clearWalls();
+          }
+          break;
+        case 'escape': // Escape - Stop animation
+          event.preventDefault();
+          if (isAnimating) {
+            onCancelAnimation();
+          }
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAnimating, onRunAlgorithm, onCancelAnimation, resetGrid, clearPath, clearWalls]);
+};
